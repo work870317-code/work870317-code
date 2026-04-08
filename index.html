@@ -1,0 +1,128 @@
+
+<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;">留職停薪復職申請提醒工具，輸入留停結束日期，自動計算最晚申請日並提供 Google 日曆提醒連結</h2>
+
+<div style="padding: 1.5rem 0;">
+
+  <div style="background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1.25rem;">
+    <p style="font-size: 13px; color: var(--color-text-secondary); margin: 0 0 4px;">留職停薪結束日期</p>
+    <input type="date" id="endDate" style="width: 100%; font-size: 16px; margin-top: 4px;" />
+  </div>
+
+  <div id="result" style="display: none;">
+
+    <div style="display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 12px; margin-bottom: 1.25rem;">
+      <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem;">
+        <p style="font-size: 13px; color: var(--color-text-secondary); margin: 0 0 6px;">最晚申請復職日</p>
+        <p id="deadlineDate" style="font-size: 20px; font-weight: 500; color: var(--color-text-primary); margin: 0;"></p>
+      </div>
+      <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem;">
+        <p style="font-size: 13px; color: var(--color-text-secondary); margin: 0 0 6px;">距離今天還有</p>
+        <p id="daysLeft" style="font-size: 20px; font-weight: 500; margin: 0;"></p>
+      </div>
+    </div>
+
+    <div id="alertBox" style="border-radius: var(--border-radius-md); padding: 0.75rem 1rem; margin-bottom: 1.25rem; font-size: 14px;"></div>
+
+    <div style="background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1.25rem;">
+      <p style="font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 12px;">加入 Google 日曆提醒</p>
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <a id="gcalDeadline" href="#" target="_blank" style="display: block; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 14px; font-size: 14px; color: var(--color-text-primary); text-decoration: none;">
+          📅 最晚申請日提醒（當天）
+        </a>
+        <a id="gcalWeekBefore" href="#" target="_blank" style="display: block; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 14px; font-size: 14px; color: var(--color-text-primary); text-decoration: none;">
+          📅 提前 7 天預警提醒
+        </a>
+      </div>
+    </div>
+
+    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem;">
+      <p style="font-size: 13px; color: var(--color-text-secondary); margin: 0;">
+        提醒：申請復職需在留停結束日前 <strong>20 天</strong>向機關提出，逾期可能違反相關規定。
+      </p>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+const endDateInput = document.getElementById('endDate');
+const resultDiv = document.getElementById('result');
+
+function formatDate(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return y + '/' + m + '/' + day;
+}
+
+function toGCalDate(d) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+  return y + m + day;
+}
+
+function gcalLink(title, date, desc) {
+  const s = toGCalDate(date);
+  const e = toGCalDate(new Date(date.getTime() + 86400000));
+  return 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+    + '&text=' + encodeURIComponent(title)
+    + '&dates=' + s + '/' + e
+    + '&details=' + encodeURIComponent(desc);
+}
+
+endDateInput.addEventListener('change', function() {
+  const val = this.value;
+  if (!val) { resultDiv.style.display = 'none'; return; }
+
+  const endDate = new Date(val + 'T00:00:00');
+  const deadline = new Date(endDate.getTime() - 20 * 86400000);
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const diff = Math.round((deadline - today) / 86400000);
+
+  document.getElementById('deadlineDate').textContent = formatDate(deadline);
+
+  const daysEl = document.getElementById('daysLeft');
+  const alertBox = document.getElementById('alertBox');
+
+  if (diff < 0) {
+    daysEl.textContent = '已逾期 ' + Math.abs(diff) + ' 天';
+    daysEl.style.color = 'var(--color-text-danger)';
+    alertBox.style.background = 'var(--color-background-danger)';
+    alertBox.style.color = 'var(--color-text-danger)';
+    alertBox.style.border = '0.5px solid var(--color-border-danger)';
+    alertBox.textContent = '申請期限已過，請盡速諮詢主管機關處理方式。';
+  } else if (diff === 0) {
+    daysEl.textContent = '今天就是最後期限';
+    daysEl.style.color = 'var(--color-text-danger)';
+    alertBox.style.background = 'var(--color-background-danger)';
+    alertBox.style.color = 'var(--color-text-danger)';
+    alertBox.style.border = '0.5px solid var(--color-border-danger)';
+    alertBox.textContent = '今天是最後申請日！請立即向機關提出復職申請。';
+  } else if (diff <= 7) {
+    daysEl.textContent = diff + ' 天';
+    daysEl.style.color = 'var(--color-text-warning)';
+    alertBox.style.background = 'var(--color-background-warning)';
+    alertBox.style.color = 'var(--color-text-warning)';
+    alertBox.style.border = '0.5px solid var(--color-border-warning)';
+    alertBox.textContent = '快到期了！剩不到一週，請盡快安排向機關提出申請。';
+  } else {
+    daysEl.textContent = diff + ' 天';
+    daysEl.style.color = 'var(--color-text-success)';
+    alertBox.style.background = 'var(--color-background-success)';
+    alertBox.style.color = 'var(--color-text-success)';
+    alertBox.style.border = '0.5px solid var(--color-border-success)';
+    alertBox.textContent = '時間充裕，記得在最晚申請日前向機關提出復職申請。';
+  }
+
+  const desc1 = '留職停薪結束日：' + formatDate(endDate) + '\n今天是最晚向機關提出復職申請的日期，請立即辦理。';
+  const desc2 = '留職停薪最晚申請復職日：' + formatDate(deadline) + '\n（留停結束日：' + formatDate(endDate) + '）\n距離截止日還有 7 天，請盡快安排辦理。';
+
+  document.getElementById('gcalDeadline').href = gcalLink('【留停】最晚復職申請日', deadline, desc1);
+  document.getElementById('gcalWeekBefore').href = gcalLink('【留停】復職申請預警', new Date(deadline.getTime() - 7*86400000), desc2);
+
+  resultDiv.style.display = 'block';
+});
+</script>
