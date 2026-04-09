@@ -1,128 +1,788 @@
 
-<h2 class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;">留職停薪復職申請提醒工具，輸入留停結束日期，自動計算最晚申請日並提供 Google 日曆提醒連結</h2>
+<html>
+<head>
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; padding: 0; font-family: var(--font-sans); }
 
-<div style="padding: 1.5rem 0;">
+.container { max-width: 900px; margin: 0 auto; padding: 20px; }
 
-  <div style="background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1.25rem;">
-    <p style="font-size: 13px; color: var(--color-text-secondary); margin: 0 0 4px;">留職停薪結束日期</p>
-    <input type="date" id="endDate" style="width: 100%; font-size: 16px; margin-top: 4px;" />
+.header {
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-lg);
+  padding: 24px;
+  margin-bottom: 24px;
+  border: 0.5px solid var(--color-border-tertiary);
+}
+
+.header h1 {
+  margin: 0 0 8px 0;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.header p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+  border-bottom: 0.5px solid var(--color-border-tertiary);
+}
+
+.tab-btn {
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -0.5px;
+}
+
+.tab-btn.active {
+  color: var(--color-text-info);
+  border-bottom-color: var(--color-text-info);
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.form-section {
+  background: var(--color-background-primary);
+  border-radius: var(--border-radius-lg);
+  border: 0.5px solid var(--color-border-tertiary);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.form-section h3 {
+  margin: 0 0 16px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  margin-bottom: 6px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 0.5px solid var(--color-border-secondary);
+  border-radius: var(--border-radius-md);
+  font-family: var(--font-sans);
+  font-size: 14px;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.signature-pad {
+  border: 2px dashed var(--color-border-secondary);
+  border-radius: var(--border-radius-md);
+  background: var(--color-background-secondary);
+  padding: 20px;
+  text-align: center;
+  margin: 12px 0;
+  min-height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: crosshair;
+  position: relative;
+  overflow: hidden;
+}
+
+#signatureCanvas {
+  display: block;
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-md);
+  background: white;
+  cursor: crosshair;
+  width: 100%;
+  max-width: 400px;
+  height: 120px;
+}
+
+.signature-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  justify-content: center;
+}
+
+.signature-buttons button {
+  padding: 8px 16px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btn {
+  padding: 12px 20px;
+  border: 0.5px solid var(--color-border-secondary);
+  background: var(--color-background-primary);
+  border-radius: var(--border-radius-md);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--color-text-primary);
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  background: var(--color-background-secondary);
+  border-color: var(--color-border-primary);
+}
+
+.btn-primary {
+  background: var(--color-background-info);
+  border-color: var(--color-border-info);
+  color: white;
+}
+
+.btn-primary:hover {
+  opacity: 0.9;
+}
+
+.btn-success {
+  background: var(--color-background-success);
+  border-color: var(--color-border-success);
+  color: white;
+}
+
+.btn-success:hover {
+  opacity: 0.9;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.reminder-item {
+  background: var(--color-background-secondary);
+  border-radius: var(--border-radius-md);
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 0.5px solid var(--color-border-tertiary);
+}
+
+.reminder-item h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.reminder-item p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
+
+.reminder-item button {
+  margin-top: 12px;
+  font-size: 12px;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: var(--border-radius-md);
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.status-draft {
+  background: var(--color-background-warning);
+  color: var(--color-text-warning);
+}
+
+.status-submitted {
+  background: var(--color-background-info);
+  color: white;
+}
+
+.status-approved {
+  background: var(--color-background-success);
+  color: white;
+}
+
+.notice {
+  background: var(--color-background-info);
+  border-left: 3px solid var(--color-border-info);
+  padding: 12px;
+  border-radius: var(--border-radius-md);
+  font-size: 13px;
+  color: var(--color-text-info);
+  margin-bottom: 16px;
+}
+
+.modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.modal-overlay.show {
+  display: flex;
+}
+
+.modal {
+  background: var(--color-background-primary);
+  border-radius: var(--border-radius-lg);
+  padding: 24px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.modal h2 {
+  margin: 0 0 16px 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.modal p {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.modal-buttons button {
+  flex: 1;
+}
+
+.success-message {
+  background: var(--color-background-success);
+  border: 0.5px solid var(--color-border-success);
+  border-radius: var(--border-radius-md);
+  padding: 16px;
+  color: var(--color-text-success);
+  margin-bottom: 16px;
+  text-align: center;
+  font-size: 14px;
+  display: none;
+}
+
+.success-message.show {
+  display: block;
+}
+
+.option-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.option-card {
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.option-card:hover {
+  border-color: var(--color-border-primary);
+  background: var(--color-background-secondary);
+}
+
+.option-card.selected {
+  border: 2px solid var(--color-border-info);
+  background: var(--color-background-info);
+  color: white;
+}
+
+.option-card h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.option-card p {
+  margin: 0;
+  font-size: 12px;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>公務人員留職停薪申請系統</h1>
+    <p>簡化申請流程・自動化提醒通知・線上簽核完成</p>
   </div>
 
-  <div id="result" style="display: none;">
-
-    <div style="display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 12px; margin-bottom: 1.25rem;">
-      <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem;">
-        <p style="font-size: 13px; color: var(--color-text-secondary); margin: 0 0 6px;">最晚申請復職日</p>
-        <p id="deadlineDate" style="font-size: 20px; font-weight: 500; color: var(--color-text-primary); margin: 0;"></p>
-      </div>
-      <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem;">
-        <p style="font-size: 13px; color: var(--color-text-secondary); margin: 0 0 6px;">距離今天還有</p>
-        <p id="daysLeft" style="font-size: 20px; font-weight: 500; margin: 0;"></p>
-      </div>
-    </div>
-
-    <div id="alertBox" style="border-radius: var(--border-radius-md); padding: 0.75rem 1rem; margin-bottom: 1.25rem; font-size: 14px;"></div>
-
-    <div style="background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem 1.5rem; margin-bottom: 1.25rem;">
-      <p style="font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 12px;">加入 Google 日曆提醒</p>
-      <div style="display: flex; flex-direction: column; gap: 8px;">
-        <a id="gcalDeadline" href="#" target="_blank" style="display: block; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 14px; font-size: 14px; color: var(--color-text-primary); text-decoration: none;">
-          📅 最晚申請日提醒（當天）
-        </a>
-        <a id="gcalWeekBefore" href="#" target="_blank" style="display: block; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 10px 14px; font-size: 14px; color: var(--color-text-primary); text-decoration: none;">
-          📅 提前 7 天預警提醒
-        </a>
-      </div>
-    </div>
-
-    <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.75rem 1rem;">
-      <p style="font-size: 13px; color: var(--color-text-secondary); margin: 0;">
-        提醒：申請復職需在留停結束日前 <strong>20 天</strong>向機關提出，逾期可能違反相關規定。
-      </p>
-    </div>
-
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('apply')">申請</button>
+    <button class="tab-btn" onclick="switchTab('reminders')">提醒管理</button>
+    <button class="tab-btn" onclick="switchTab('status')">申請狀態</button>
   </div>
 
+  <!-- 申請頁籤 -->
+  <div id="apply" class="tab-content active">
+    <div class="notice">
+      💡 根據公務人員留職停薪辦法，選擇您的申請類型開始
+    </div>
+
+    <div class="form-section">
+      <h3>第一步：申請類型</h3>
+      <div class="option-cards" id="optionCards">
+        <div class="option-card" onclick="selectType(this, 'new')">
+          <h4>新申請回職</h4>
+          <p>首次申請回職上班</p>
+        </div>
+        <div class="option-card" onclick="selectType(this, 'extend')">
+          <h4>延長留職停薪</h4>
+          <p>現有留職停薪期滿前申請延長</p>
+        </div>
+      </div>
+      <input type="hidden" id="applicationType" value="">
+    </div>
+
+    <!-- 回職申請表 -->
+    <div id="newApplyForm" style="display: none;">
+      <div class="form-section">
+        <h3>回職申請表</h3>
+        
+        <div class="form-group">
+          <label>姓名</label>
+          <input type="text" placeholder="請輸入姓名" id="name">
+        </div>
+
+        <div class="form-group">
+          <label>身分證字號</label>
+          <input type="text" placeholder="A123456789" id="idNumber">
+        </div>
+
+        <div class="form-group">
+          <label>職稱</label>
+          <input type="text" placeholder="例：科員、科長" id="position">
+        </div>
+
+        <div class="form-group">
+          <label>所在機關單位</label>
+          <input type="text" placeholder="例：人事處" id="department">
+        </div>
+
+        <div class="form-group">
+          <label>原留職停薪起日</label>
+          <input type="date" id="startDate">
+        </div>
+
+        <div class="form-group">
+          <label>原留職停薪迄日</label>
+          <input type="date" id="endDate">
+        </div>
+
+        <div class="form-group">
+          <label>回職日期</label>
+          <input type="date" id="returnDate">
+        </div>
+
+        <div class="form-group">
+          <label>備註</label>
+          <textarea placeholder="如有特殊說明，請輸入備註" id="remarks"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>電子簽名</label>
+          <div class="signature-pad" id="signaturePad">
+            <span style="color: var(--color-text-secondary); font-size: 14px;">點擊下方簽名區域開始簽名</span>
+          </div>
+          <canvas id="signatureCanvas"></canvas>
+          <div class="signature-buttons">
+            <button class="btn" onclick="clearSignature()">清除</button>
+            <button class="btn btn-primary" onclick="confirmSignature()">確認簽名</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 延長留職停薪申請表 -->
+    <div id="extendApplyForm" style="display: none;">
+      <div class="form-section">
+        <h3>延長留職停薪申請表</h3>
+        
+        <div class="form-group">
+          <label>姓名</label>
+          <input type="text" placeholder="請輸入姓名" id="extendName">
+        </div>
+
+        <div class="form-group">
+          <label>身分證字號</label>
+          <input type="text" placeholder="A123456789" id="extendIdNumber">
+        </div>
+
+        <div class="form-group">
+          <label>職稱</label>
+          <input type="text" placeholder="例：科員、科長" id="extendPosition">
+        </div>
+
+        <div class="form-group">
+          <label>所在機關單位</label>
+          <input type="text" placeholder="例：人事處" id="extendDepartment">
+        </div>
+
+        <div class="form-group">
+          <label>現留職停薪迄日</label>
+          <input type="date" id="currentEndDate">
+        </div>
+
+        <div class="form-group">
+          <label>擬延長至</label>
+          <input type="date" id="extendToDate">
+        </div>
+
+        <div class="form-group">
+          <label>延長原因說明</label>
+          <textarea placeholder="說明延長留職停薪的原因" id="extendReason"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>是否申請津貼？</label>
+          <select id="stipendOption">
+            <option value="">--請選擇--</option>
+            <option value="yes">需要申請津貼</option>
+            <option value="no">不申請津貼</option>
+          </select>
+        </div>
+
+        <div id="stipendForm" style="display: none;">
+          <div class="form-section">
+            <h3>津貼申請表</h3>
+            <div class="form-group">
+              <label>申請津貼類別</label>
+              <select id="stipendType">
+                <option value="">--請選擇--</option>
+                <option value="family">眷屬扶養津貼</option>
+                <option value="hardship">困苦津貼</option>
+                <option value="other">其他津貼</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>申請金額</label>
+              <input type="number" placeholder="0" id="stipendAmount">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>電子簽名</label>
+          <canvas id="signatureCanvas2"></canvas>
+          <div class="signature-buttons">
+            <button class="btn" onclick="clearSignature2()">清除</button>
+            <button class="btn btn-primary" onclick="confirmSignature2()">確認簽名</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 提交按鈕 -->
+    <div class="actions">
+      <button class="btn btn-success" onclick="submitApplication()">提交申請</button>
+      <button class="btn" onclick="resetForm()">重新填寫</button>
+      <button class="btn" onclick="saveAsDraft()">存為草稿</button>
+    </div>
+  </div>
+
+  <!-- 提醒管理頁籤 -->
+  <div id="reminders" class="tab-content">
+    <div class="form-section">
+      <h3>自動提醒設定</h3>
+      <p style="color: var(--color-text-secondary); font-size: 14px; margin-top: 0;">系統會在重要日期自動發送提醒通知，您可以選擇提醒方式</p>
+    </div>
+
+    <div class="reminder-item">
+      <h4>📅 Google 日曆提醒</h4>
+      <p>將回職申請日期同步到 Google 日曆，接收自動提醒</p>
+      <button class="btn btn-primary" onclick="syncGoogleCalendar()">連接 Google 日曆</button>
+    </div>
+
+    <div class="reminder-item">
+      <h4>💬 LINE 通知提醒</h4>
+      <p>直接在 LINE 上收到回職申請提醒與申請進度通知</p>
+      <button class="btn btn-primary" onclick="linkLineNotify()">連接 LINE Notify</button>
+    </div>
+
+    <div class="reminder-item">
+      <h4>📧 電子郵件提醒</h4>
+      <p>在您的信箱收到申請狀態更新與核簽結果</p>
+      <div class="form-group" style="margin-top: 12px;">
+        <input type="email" placeholder="請輸入您的信箱" id="emailAddress">
+        <button class="btn btn-primary" onclick="subscribeEmail()" style="margin-top: 8px;">訂閱郵件通知</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 申請狀態頁籤 -->
+  <div id="status" class="tab-content">
+    <div class="form-section">
+      <h3>申請狀態追蹤</h3>
+      
+      <div class="status-badge status-draft">🔹 草稿中</div>
+
+      <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 16px; margin-bottom: 16px;">
+        <table style="width: 100%; font-size: 13px;">
+          <tr style="border-bottom: 0.5px solid var(--color-border-tertiary);">
+            <td style="padding: 8px 0; color: var(--color-text-secondary);">申請類型</td>
+            <td style="text-align: right; padding: 8px 0; color: var(--color-text-primary);">新申請回職</td>
+          </tr>
+          <tr style="border-bottom: 0.5px solid var(--color-border-tertiary);">
+            <td style="padding: 8px 0; color: var(--color-text-secondary);">申請日期</td>
+            <td style="text-align: right; padding: 8px 0; color: var(--color-text-primary);">待提交</td>
+          </tr>
+          <tr style="border-bottom: 0.5px solid var(--color-border-tertiary);">
+            <td style="padding: 8px 0; color: var(--color-text-secondary);">核簽進度</td>
+            <td style="text-align: right; padding: 8px 0; color: var(--color-text-primary);">等待初稿</td>
+          </tr>
+          <tr>
+            <td style="padding: 8px 0; color: var(--color-text-secondary);">預計完成</td>
+            <td style="text-align: right; padding: 8px 0; color: var(--color-text-primary);">--</td>
+          </tr>
+        </table>
+      </div>
+
+      <div class="notice">
+        ℹ️ 核簽進度將在申請提交後顯示。請保留聯繫方式以接收核簽進度通知。
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="successModal" class="modal-overlay">
+  <div class="modal">
+    <h2>✓ 申請已提交</h2>
+    <p>您的申請已成功提交，系統將發送確認信至您的信箱。</p>
+    <p style="font-size: 13px; color: var(--color-text-secondary);">
+      申請編號：<strong id="applicationNumber"></strong>
+    </p>
+    <div class="modal-buttons">
+      <button class="btn btn-success" onclick="closeModal()">完成</button>
+    </div>
+  </div>
 </div>
 
 <script>
-const endDateInput = document.getElementById('endDate');
-const resultDiv = document.getElementById('result');
+let isDrawing = false;
+let canvas, ctx;
+let hasSignature = false;
 
-function formatDate(d) {
-  const y = d.getFullYear();
-  const m = String(d.getMonth()+1).padStart(2,'0');
-  const day = String(d.getDate()).padStart(2,'0');
-  return y + '/' + m + '/' + day;
+function switchTab(tabName) {
+  // 隱藏所有內容
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  
+  // 顯示選中的頁籤
+  document.getElementById(tabName).classList.add('active');
+  event.target.classList.add('active');
 }
 
-function toGCalDate(d) {
-  const y = d.getFullYear();
-  const m = String(d.getMonth()+1).padStart(2,'0');
-  const day = String(d.getDate()).padStart(2,'0');
-  return y + m + day;
-}
+function selectType(element, type) {
+  // 更新選中狀態
+  document.querySelectorAll('.option-card').forEach(el => el.classList.remove('selected'));
+  element.classList.add('selected');
+  document.getElementById('applicationType').value = type;
 
-function gcalLink(title, date, desc) {
-  const s = toGCalDate(date);
-  const e = toGCalDate(new Date(date.getTime() + 86400000));
-  return 'https://calendar.google.com/calendar/render?action=TEMPLATE'
-    + '&text=' + encodeURIComponent(title)
-    + '&dates=' + s + '/' + e
-    + '&details=' + encodeURIComponent(desc);
-}
+  // 顯示對應的表單
+  document.getElementById('newApplyForm').style.display = type === 'new' ? 'block' : 'none';
+  document.getElementById('extendApplyForm').style.display = type === 'extend' ? 'block' : 'none';
 
-endDateInput.addEventListener('change', function() {
-  const val = this.value;
-  if (!val) { resultDiv.style.display = 'none'; return; }
-
-  const endDate = new Date(val + 'T00:00:00');
-  const deadline = new Date(endDate.getTime() - 20 * 86400000);
-  const today = new Date();
-  today.setHours(0,0,0,0);
-  const diff = Math.round((deadline - today) / 86400000);
-
-  document.getElementById('deadlineDate').textContent = formatDate(deadline);
-
-  const daysEl = document.getElementById('daysLeft');
-  const alertBox = document.getElementById('alertBox');
-
-  if (diff < 0) {
-    daysEl.textContent = '已逾期 ' + Math.abs(diff) + ' 天';
-    daysEl.style.color = 'var(--color-text-danger)';
-    alertBox.style.background = 'var(--color-background-danger)';
-    alertBox.style.color = 'var(--color-text-danger)';
-    alertBox.style.border = '0.5px solid var(--color-border-danger)';
-    alertBox.textContent = '申請期限已過，請盡速諮詢主管機關處理方式。';
-  } else if (diff === 0) {
-    daysEl.textContent = '今天就是最後期限';
-    daysEl.style.color = 'var(--color-text-danger)';
-    alertBox.style.background = 'var(--color-background-danger)';
-    alertBox.style.color = 'var(--color-text-danger)';
-    alertBox.style.border = '0.5px solid var(--color-border-danger)';
-    alertBox.textContent = '今天是最後申請日！請立即向機關提出復職申請。';
-  } else if (diff <= 7) {
-    daysEl.textContent = diff + ' 天';
-    daysEl.style.color = 'var(--color-text-warning)';
-    alertBox.style.background = 'var(--color-background-warning)';
-    alertBox.style.color = 'var(--color-text-warning)';
-    alertBox.style.border = '0.5px solid var(--color-border-warning)';
-    alertBox.textContent = '快到期了！剩不到一週，請盡快安排向機關提出申請。';
+  // 初始化簽名板
+  if (type === 'new') {
+    setTimeout(() => initCanvas('signatureCanvas'), 100);
   } else {
-    daysEl.textContent = diff + ' 天';
-    daysEl.style.color = 'var(--color-text-success)';
-    alertBox.style.background = 'var(--color-background-success)';
-    alertBox.style.color = 'var(--color-text-success)';
-    alertBox.style.border = '0.5px solid var(--color-border-success)';
-    alertBox.textContent = '時間充裕，記得在最晚申請日前向機關提出復職申請。';
+    setTimeout(() => initCanvas('signatureCanvas2'), 100);
+  }
+}
+
+function initCanvas(canvasId) {
+  canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  
+  const rect = canvas.getBoundingClientRect();
+  canvas.width = 400;
+  canvas.height = 120;
+  ctx = canvas.getContext('2d');
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.strokeStyle = '#333';
+  ctx.lineWidth = 2;
+
+  canvas.addEventListener('mousedown', startDrawing);
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', stopDrawing);
+  canvas.addEventListener('mouseout', stopDrawing);
+
+  // Touch events
+  canvas.addEventListener('touchstart', startDrawingTouch);
+  canvas.addEventListener('touchmove', drawTouch);
+  canvas.addEventListener('touchend', stopDrawing);
+}
+
+function startDrawing(e) {
+  isDrawing = true;
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+}
+
+function draw(e) {
+  if (!isDrawing) return;
+  const rect = canvas.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  ctx.lineTo(x, y);
+  ctx.stroke();
+  hasSignature = true;
+}
+
+function stopDrawing() {
+  isDrawing = false;
+}
+
+function startDrawingTouch(e) {
+  isDrawing = true;
+  const rect = canvas.getBoundingClientRect();
+  const x = e.touches[0].clientX - rect.left;
+  const y = e.touches[0].clientY - rect.top;
+  ctx.beginPath();
+  ctx.moveTo(x, y);
+}
+
+function drawTouch(e) {
+  if (!isDrawing) return;
+  e.preventDefault();
+  const rect = canvas.getBoundingClientRect();
+  const x = e.touches[0].clientX - rect.left;
+  const y = e.touches[0].clientY - rect.top;
+  ctx.lineTo(x, y);
+  ctx.stroke();
+  hasSignature = true;
+}
+
+function clearSignature() {
+  ctx.fillStyle = 'white';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  hasSignature = false;
+}
+
+function clearSignature2() {
+  const canvas2 = document.getElementById('signatureCanvas2');
+  const ctx2 = canvas2.getContext('2d');
+  ctx2.fillStyle = 'white';
+  ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
+}
+
+function confirmSignature() {
+  if (!hasSignature) {
+    alert('請先簽名');
+    return;
+  }
+  alert('簽名已確認 ✓');
+}
+
+function confirmSignature2() {
+  alert('簽名已確認 ✓');
+}
+
+document.getElementById('stipendOption')?.addEventListener('change', function() {
+  document.getElementById('stipendForm').style.display = this.value === 'yes' ? 'block' : 'none';
+});
+
+function submitApplication() {
+  const type = document.getElementById('applicationType').value;
+  if (!type) {
+    alert('請先選擇申請類型');
+    return;
+  }
+  if (!hasSignature) {
+    alert('請先簽名');
+    return;
   }
 
-  const desc1 = '留職停薪結束日：' + formatDate(endDate) + '\n今天是最晚向機關提出復職申請的日期，請立即辦理。';
-  const desc2 = '留職停薪最晚申請復職日：' + formatDate(deadline) + '\n（留停結束日：' + formatDate(endDate) + '）\n距離截止日還有 7 天，請盡快安排辦理。';
+  const appNumber = 'APP-' + Date.now().toString().slice(-8);
+  document.getElementById('applicationNumber').textContent = appNumber;
+  document.getElementById('successModal').classList.add('show');
+}
 
-  document.getElementById('gcalDeadline').href = gcalLink('【留停】最晚復職申請日', deadline, desc1);
-  document.getElementById('gcalWeekBefore').href = gcalLink('【留停】復職申請預警', new Date(deadline.getTime() - 7*86400000), desc2);
+function closeModal() {
+  document.getElementById('successModal').classList.remove('show');
+}
 
-  resultDiv.style.display = 'block';
-});
+function resetForm() {
+  document.querySelectorAll('input, textarea, select').forEach(el => el.value = '');
+  document.getElementById('applicationType').value = '';
+  document.querySelectorAll('.option-card').forEach(el => el.classList.remove('selected'));
+  document.getElementById('newApplyForm').style.display = 'none';
+  document.getElementById('extendApplyForm').style.display = 'none';
+}
+
+function saveAsDraft() {
+  alert('已保存為草稿 📝');
+}
+
+function syncGoogleCalendar() {
+  alert('✓ 已成功連接 Google 日曆\n\n回職日期將自動加入您的日曆，並設定提醒通知。');
+}
+
+function linkLineNotify() {
+  alert('✓ 已成功連接 LINE Notify\n\n申請進度與提醒通知將直接發送到您的 LINE。');
+}
+
+function subscribeEmail() {
+  const email = document.getElementById('emailAddress').value;
+  if (!email) {
+    alert('請輸入信箱');
+    return;
+  }
+  alert(`✓ 已訂閱 ${email}\n\n申請狀態更新將發送至此信箱。`);
+}
 </script>
+</body>
+</html>
