@@ -33,6 +33,7 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
   gap: 8px;
   margin-bottom: 20px;
   border-bottom: 0.5px solid var(--color-border-tertiary);
+  overflow-x: auto;
 }
 
 .tab-btn {
@@ -45,6 +46,7 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
   cursor: pointer;
   border-bottom: 2px solid transparent;
   margin-bottom: -0.5px;
+  white-space: nowrap;
 }
 
 .tab-btn.active {
@@ -71,6 +73,13 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
 .form-section h3 {
   margin: 0 0 16px 0;
   font-size: 16px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.form-section h4 {
+  margin: 16px 0 12px 0;
+  font-size: 14px;
   font-weight: 500;
   color: var(--color-text-primary);
 }
@@ -103,44 +112,77 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
   min-height: 80px;
 }
 
-.signature-pad {
-  border: 2px dashed var(--color-border-secondary);
-  border-radius: var(--border-radius-md);
-  background: var(--color-background-secondary);
-  padding: 20px;
-  text-align: center;
-  margin: 12px 0;
-  min-height: 120px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: crosshair;
-  position: relative;
-  overflow: hidden;
+.form-group.required label::after {
+  content: " *";
+  color: var(--color-text-danger);
 }
 
-#signatureCanvas {
-  display: block;
+.option-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.option-card {
   border: 0.5px solid var(--color-border-tertiary);
-  border-radius: var(--border-radius-md);
-  background: white;
-  cursor: crosshair;
-  width: 100%;
-  max-width: 400px;
-  height: 120px;
-}
-
-.signature-buttons {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
-  justify-content: center;
-}
-
-.signature-buttons button {
-  padding: 8px 16px;
-  font-size: 13px;
+  border-radius: var(--border-radius-lg);
+  padding: 16px;
   cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.option-card:hover {
+  border-color: var(--color-border-primary);
+  background: var(--color-background-secondary);
+}
+
+.option-card.selected {
+  border: 2px solid var(--color-border-info);
+  background: var(--color-background-info);
+  color: white;
+}
+
+.option-card h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.option-card p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.notice {
+  background: var(--color-background-info);
+  border-left: 3px solid var(--color-border-info);
+  padding: 12px;
+  border-radius: var(--border-radius-md);
+  font-size: 13px;
+  color: var(--color-text-info);
+  margin-bottom: 16px;
+}
+
+.warning-notice {
+  background: var(--color-background-warning);
+  border-left: 3px solid var(--color-border-warning);
+  color: var(--color-text-warning);
+}
+
+.conditional-section {
+  display: none;
+  background: var(--color-background-secondary);
+  border: 0.5px solid var(--color-border-secondary);
+  border-radius: var(--border-radius-md);
+  padding: 16px;
+  margin-top: 12px;
+}
+
+.conditional-section.show {
+  display: block;
 }
 
 .btn {
@@ -180,6 +222,12 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
   opacity: 0.9;
 }
 
+.btn-warning {
+  background: var(--color-background-warning);
+  border-color: var(--color-border-warning);
+  color: var(--color-text-warning);
+}
+
 .actions {
   display: flex;
   gap: 12px;
@@ -187,64 +235,54 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
   flex-wrap: wrap;
 }
 
-.reminder-item {
+.document-download {
   background: var(--color-background-secondary);
+  border: 0.5px solid var(--color-border-tertiary);
   border-radius: var(--border-radius-md);
   padding: 16px;
   margin-bottom: 12px;
-  border: 0.5px solid var(--color-border-tertiary);
 }
 
-.reminder-item h4 {
+.document-download h4 {
   margin: 0 0 8px 0;
   font-size: 14px;
   font-weight: 500;
   color: var(--color-text-primary);
 }
 
-.reminder-item p {
-  margin: 0;
+.document-download p {
+  margin: 0 0 12px 0;
   font-size: 13px;
   color: var(--color-text-secondary);
 }
 
-.reminder-item button {
+.document-download button {
+  font-size: 13px;
+}
+
+.signature-section {
+  background: var(--color-background-secondary);
+  border: 0.5px solid var(--color-border-secondary);
+  border-radius: var(--border-radius-md);
+  padding: 16px;
   margin-top: 12px;
-  font-size: 12px;
 }
 
-.status-badge {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: var(--border-radius-md);
-  font-size: 12px;
+.signature-section h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
   font-weight: 500;
-  margin-bottom: 12px;
+  color: var(--color-text-primary);
 }
 
-.status-draft {
-  background: var(--color-background-warning);
-  color: var(--color-text-warning);
-}
-
-.status-submitted {
+.signature-note {
   background: var(--color-background-info);
-  color: white;
-}
-
-.status-approved {
-  background: var(--color-background-success);
-  color: white;
-}
-
-.notice {
-  background: var(--color-background-info);
-  border-left: 3px solid var(--color-border-info);
-  padding: 12px;
+  border: 0.5px solid var(--color-border-info);
   border-radius: var(--border-radius-md);
+  padding: 12px;
+  margin-bottom: 12px;
   font-size: 13px;
   color: var(--color-text-info);
-  margin-bottom: 16px;
 }
 
 .modal-overlay {
@@ -280,7 +318,7 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
 }
 
 .modal p {
-  margin: 0 0 16px 0;
+  margin: 0 0 12px 0;
   font-size: 14px;
   color: var(--color-text-secondary);
 }
@@ -295,57 +333,44 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
   flex: 1;
 }
 
-.success-message {
-  background: var(--color-background-success);
-  border: 0.5px solid var(--color-border-success);
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
   border-radius: var(--border-radius-md);
-  padding: 16px;
-  color: var(--color-text-success);
-  margin-bottom: 16px;
-  text-align: center;
-  font-size: 14px;
-  display: none;
+  font-size: 12px;
+  font-weight: 500;
+  margin-bottom: 12px;
 }
 
-.success-message.show {
-  display: block;
+.status-draft {
+  background: var(--color-background-warning);
+  color: var(--color-text-warning);
 }
 
-.option-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
-  margin-bottom: 20px;
-}
-
-.option-card {
-  border: 0.5px solid var(--color-border-tertiary);
-  border-radius: var(--border-radius-lg);
-  padding: 16px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.option-card:hover {
-  border-color: var(--color-border-primary);
-  background: var(--color-background-secondary);
-}
-
-.option-card.selected {
-  border: 2px solid var(--color-border-info);
+.status-submitted {
   background: var(--color-background-info);
   color: white;
 }
 
-.option-card h4 {
-  margin: 0 0 8px 0;
-  font-size: 14px;
-  font-weight: 500;
+.status-approved {
+  background: var(--color-background-success);
+  color: white;
 }
 
-.option-card p {
-  margin: 0;
-  font-size: 12px;
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .option-cards {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
 </head>
@@ -358,145 +383,141 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
 
   <div class="tabs">
     <button class="tab-btn active" onclick="switchTab('apply')">申請</button>
+    <button class="tab-btn" onclick="switchTab('download')">下載簽署</button>
     <button class="tab-btn" onclick="switchTab('reminders')">提醒管理</button>
     <button class="tab-btn" onclick="switchTab('status')">申請狀態</button>
   </div>
 
-  <!-- 申請頁籤 -->
+  <!-- ========== 申請頁籤 ========== -->
   <div id="apply" class="tab-content active">
     <div class="notice">
-      💡 根據公務人員留職停薪辦法，選擇您的申請類型開始
+      根據公務人員留職停薪辦法，請選擇您的申請類型開始
     </div>
 
+    <!-- 申請類型選擇 -->
     <div class="form-section">
       <h3>第一步：申請類型</h3>
-      <div class="option-cards" id="optionCards">
-        <div class="option-card" onclick="selectType(this, 'new')">
-          <h4>新申請回職</h4>
-          <p>首次申請回職上班</p>
+      <div class="option-cards" id="applicationTypeCards">
+        <div class="option-card" onclick="selectApplicationType(this, 'apply')">
+          <h4>申請留職停薪</h4>
+          <p>首次申請留職停薪</p>
         </div>
-        <div class="option-card" onclick="selectType(this, 'extend')">
-          <h4>延長留職停薪</h4>
-          <p>現有留職停薪期滿前申請延長</p>
+        <div class="option-card" onclick="selectApplicationType(this, 'return')">
+          <h4>申請回職復薪</h4>
+          <p>留職停薪期滿申請回職</p>
+        </div>
+        <div class="option-card" onclick="selectApplicationType(this, 'extend')">
+          <h4>申請延長留職停薪</h4>
+          <p>現有留職停薪申請延長</p>
         </div>
       </div>
       <input type="hidden" id="applicationType" value="">
     </div>
 
-    <!-- 回職申請表 -->
-    <div id="newApplyForm" style="display: none;">
+    <!-- ========== 1. 申請留職停薪表單 ========== -->
+    <div id="applyForm" style="display: none;">
       <div class="form-section">
-        <h3>回職申請表</h3>
-        
-        <div class="form-group">
-          <label>姓名</label>
-          <input type="text" placeholder="請輸入姓名" id="name">
+        <h3>申請留職停薪</h3>
+
+        <!-- 基本資料 -->
+        <h4>基本資料</h4>
+        <div class="form-row">
+          <div class="form-group required">
+            <label>姓名</label>
+            <input type="text" placeholder="請輸入姓名" class="form-data" data-field="name">
+          </div>
+          <div class="form-group required">
+            <label>身分證字號</label>
+            <input type="text" placeholder="A123456789" class="form-data" data-field="idNumber">
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>身分證字號</label>
-          <input type="text" placeholder="A123456789" id="idNumber">
+        <div class="form-row">
+          <div class="form-group required">
+            <label>職稱</label>
+            <input type="text" placeholder="例：科員、科長" class="form-data" data-field="position">
+          </div>
+          <div class="form-group required">
+            <label>所在機關單位</label>
+            <input type="text" placeholder="例：人事處" class="form-data" data-field="department">
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>職稱</label>
-          <input type="text" placeholder="例：科員、科長" id="position">
+        <!-- 留職停薪類型 -->
+        <h4>留職停薪類型</h4>
+        <div class="option-cards" id="leaveTypeCards">
+          <div class="option-card" onclick="selectLeaveType(this, 'childcare')">
+            <h4>育嬰（含孫）</h4>
+            <p>照顧嬰幼兒或孫</p>
+          </div>
+          <div class="option-card" onclick="selectLeaveType(this, 'military')">
+            <h4>兵役</h4>
+            <p>服兵役期間</p>
+          </div>
+          <div class="option-card" onclick="selectLeaveType(this, 'elderly')">
+            <h4>侍親</h4>
+            <p>照顧家庭成員</p>
+          </div>
+          <div class="option-card" onclick="selectLeaveType(this, 'other')">
+            <h4>其他</h4>
+            <p>其他留職停薪原因</p>
+          </div>
+        </div>
+        <input type="hidden" id="leaveType" value="">
+
+        <!-- 留職停薪期限 -->
+        <h4>留職停薪期限</h4>
+        <div class="form-row">
+          <div class="form-group required">
+            <label>留職停薪起日</label>
+            <input type="date" class="form-data" data-field="startDate">
+          </div>
+          <div class="form-group required">
+            <label>留職停薪迄日</label>
+            <input type="date" class="form-data" data-field="endDate">
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>所在機關單位</label>
-          <input type="text" placeholder="例：人事處" id="department">
+        <!-- 育嬰留職停薪專有 -->
+        <div id="childcareSection" class="conditional-section">
+          <div class="notice warning-notice">
+            ℹ️ 育嬰留職停薪可申請津貼，將在下一步提供
+          </div>
+          <div class="form-group">
+            <label>受撫養兒童出生日期</label>
+            <input type="date" class="form-data" data-field="childBirthDate">
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>原留職停薪起日</label>
-          <input type="date" id="startDate">
-        </div>
-
-        <div class="form-group">
-          <label>原留職停薪迄日</label>
-          <input type="date" id="endDate">
-        </div>
-
-        <div class="form-group">
-          <label>回職日期</label>
-          <input type="date" id="returnDate">
+        <!-- 其他留職停薪專有 -->
+        <div id="otherReasonSection" class="conditional-section">
+          <div class="form-group">
+            <label>留職停薪原因說明</label>
+            <textarea class="form-data" data-field="leaveReason" placeholder="詳細說明留職停薪原因"></textarea>
+          </div>
         </div>
 
         <div class="form-group">
           <label>備註</label>
-          <textarea placeholder="如有特殊說明，請輸入備註" id="remarks"></textarea>
+          <textarea placeholder="如有特殊說明，請輸入備註" class="form-data" data-field="remarks"></textarea>
         </div>
 
-        <div class="form-group">
-          <label>電子簽名</label>
-          <div class="signature-pad" id="signaturePad">
-            <span style="color: var(--color-text-secondary); font-size: 14px;">點擊下方簽名區域開始簽名</span>
+        <!-- 津貼申請（僅育嬰） -->
+        <div id="stipendSection" class="conditional-section">
+          <h4>津貼申請</h4>
+          <div class="form-group">
+            <label>是否申請留職停薪津貼？</label>
+            <select id="stipendOption" onchange="toggleStipendForm()">
+              <option value="">--請選擇--</option>
+              <option value="yes">是，申請津貼</option>
+              <option value="no">否，不申請</option>
+            </select>
           </div>
-          <canvas id="signatureCanvas"></canvas>
-          <div class="signature-buttons">
-            <button class="btn" onclick="clearSignature()">清除</button>
-            <button class="btn btn-primary" onclick="confirmSignature()">確認簽名</button>
-          </div>
-        </div>
-      </div>
-    </div>
 
-    <!-- 延長留職停薪申請表 -->
-    <div id="extendApplyForm" style="display: none;">
-      <div class="form-section">
-        <h3>延長留職停薪申請表</h3>
-        
-        <div class="form-group">
-          <label>姓名</label>
-          <input type="text" placeholder="請輸入姓名" id="extendName">
-        </div>
-
-        <div class="form-group">
-          <label>身分證字號</label>
-          <input type="text" placeholder="A123456789" id="extendIdNumber">
-        </div>
-
-        <div class="form-group">
-          <label>職稱</label>
-          <input type="text" placeholder="例：科員、科長" id="extendPosition">
-        </div>
-
-        <div class="form-group">
-          <label>所在機關單位</label>
-          <input type="text" placeholder="例：人事處" id="extendDepartment">
-        </div>
-
-        <div class="form-group">
-          <label>現留職停薪迄日</label>
-          <input type="date" id="currentEndDate">
-        </div>
-
-        <div class="form-group">
-          <label>擬延長至</label>
-          <input type="date" id="extendToDate">
-        </div>
-
-        <div class="form-group">
-          <label>延長原因說明</label>
-          <textarea placeholder="說明延長留職停薪的原因" id="extendReason"></textarea>
-        </div>
-
-        <div class="form-group">
-          <label>是否申請津貼？</label>
-          <select id="stipendOption">
-            <option value="">--請選擇--</option>
-            <option value="yes">需要申請津貼</option>
-            <option value="no">不申請津貼</option>
-          </select>
-        </div>
-
-        <div id="stipendForm" style="display: none;">
-          <div class="form-section">
-            <h3>津貼申請表</h3>
+          <div id="stipendDetailsForm" class="conditional-section">
             <div class="form-group">
-              <label>申請津貼類別</label>
-              <select id="stipendType">
+              <label>津貼申請類別</label>
+              <select class="form-data" data-field="stipendType">
                 <option value="">--請選擇--</option>
                 <option value="family">眷屬扶養津貼</option>
                 <option value="hardship">困苦津貼</option>
@@ -504,51 +525,281 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
               </select>
             </div>
             <div class="form-group">
-              <label>申請金額</label>
-              <input type="number" placeholder="0" id="stipendAmount">
+              <label>申請金額（月額）</label>
+              <input type="number" placeholder="0" class="form-data" data-field="stipendAmount">
             </div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <label>電子簽名</label>
-          <canvas id="signatureCanvas2"></canvas>
-          <div class="signature-buttons">
-            <button class="btn" onclick="clearSignature2()">清除</button>
-            <button class="btn btn-primary" onclick="confirmSignature2()">確認簽名</button>
+            <div class="form-group">
+              <label>申請津貼期限</label>
+              <input type="date" class="form-data" data-field="stipendStartDate">
+            </div>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- ========== 2. 申請回職復薪表單 ========== -->
+    <div id="returnForm" style="display: none;">
+      <div class="form-section">
+        <h3>申請回職復薪</h3>
+
+        <h4>基本資料</h4>
+        <div class="form-row">
+          <div class="form-group required">
+            <label>姓名</label>
+            <input type="text" placeholder="請輸入姓名" class="form-data" data-field="returnName">
+          </div>
+          <div class="form-group required">
+            <label>身分證字號</label>
+            <input type="text" placeholder="A123456789" class="form-data" data-field="returnIdNumber">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group required">
+            <label>職稱</label>
+            <input type="text" placeholder="例：科員、科長" class="form-data" data-field="returnPosition">
+          </div>
+          <div class="form-group required">
+            <label>所在機關單位</label>
+            <input type="text" placeholder="例：人事處" class="form-data" data-field="returnDepartment">
+          </div>
+        </div>
+
+        <h4>現有留職停薪狀況</h4>
+        <div class="form-group">
+          <label>留職停薪類型</label>
+          <select class="form-data" data-field="currentLeaveType">
+            <option value="">--請選擇--</option>
+            <option value="childcare">育嬰（含孫）</option>
+            <option value="military">兵役</option>
+            <option value="elderly">侍親</option>
+            <option value="other">其他</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group required">
+            <label>原留職停薪起日</label>
+            <input type="date" class="form-data" data-field="originalStartDate">
+          </div>
+          <div class="form-group required">
+            <label>原留職停薪迄日</label>
+            <input type="date" class="form-data" data-field="originalEndDate">
+          </div>
+        </div>
+
+        <h4>回職日期</h4>
+        <div class="form-group required">
+          <label>擬回職日期</label>
+          <input type="date" class="form-data" data-field="returnDate">
+        </div>
+
+        <div class="form-group">
+          <label>備註</label>
+          <textarea placeholder="如有特殊說明，請輸入備註" class="form-data" data-field="returnRemarks"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 3. 申請延長留職停薪表單 ========== -->
+    <div id="extendForm" style="display: none;">
+      <div class="form-section">
+        <h3>申請延長留職停薪</h3>
+
+        <h4>基本資料</h4>
+        <div class="form-row">
+          <div class="form-group required">
+            <label>姓名</label>
+            <input type="text" placeholder="請輸入姓名" class="form-data" data-field="extendName">
+          </div>
+          <div class="form-group required">
+            <label>身分證字號</label>
+            <input type="text" placeholder="A123456789" class="form-data" data-field="extendIdNumber">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group required">
+            <label>職稱</label>
+            <input type="text" placeholder="例：科員、科長" class="form-data" data-field="extendPosition">
+          </div>
+          <div class="form-group required">
+            <label>所在機關單位</label>
+            <input type="text" placeholder="例：人事處" class="form-data" data-field="extendDepartment">
+          </div>
+        </div>
+
+        <h4>現有留職停薪狀況</h4>
+        <div class="form-group">
+          <label>留職停薪類型</label>
+          <select class="form-data" data-field="currentLeaveTypeExtend">
+            <option value="">--請選擇--</option>
+            <option value="childcare">育嬰（含孫）</option>
+            <option value="military">兵役</option>
+            <option value="elderly">侍親</option>
+            <option value="other">其他</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group required">
+            <label>現留職停薪迄日</label>
+            <input type="date" class="form-data" data-field="currentEndDate">
+          </div>
+          <div class="form-group required">
+            <label>擬延長至</label>
+            <input type="date" class="form-data" data-field="extendToDate">
+          </div>
+        </div>
+
+        <h4>延長原因</h4>
+        <div class="form-group">
+          <label>延長原因說明</label>
+          <textarea placeholder="詳細說明申請延長的原因" class="form-data" data-field="extendReason"></textarea>
+        </div>
+
+        <!-- 育嬰留職停薪延長專有 -->
+        <div id="extendChildcareSection" class="conditional-section">
+          <h4>津貼申請</h4>
+          <div class="notice warning-notice">
+            育嬰留職停薪延長期間可申請津貼
+          </div>
+          <div class="form-group">
+            <label>是否申請留職停薪津貼？</label>
+            <select id="extendStipendOption" onchange="toggleExtendStipendForm()">
+              <option value="">--請選擇--</option>
+              <option value="yes">是，申請津貼</option>
+              <option value="no">否，不申請</option>
+            </select>
+          </div>
+
+          <div id="extendStipendDetailsForm" class="conditional-section">
+            <div class="form-group">
+              <label>津貼申請類別</label>
+              <select class="form-data" data-field="extendStipendType">
+                <option value="">--請選擇--</option>
+                <option value="family">眷屬扶養津貼</option>
+                <option value="hardship">困苦津貼</option>
+                <option value="other">其他津貼</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>申請金額（月額）</label>
+              <input type="number" placeholder="0" class="form-data" data-field="extendStipendAmount">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>備註</label>
+          <textarea placeholder="如有特殊說明，請輸入備註" class="form-data" data-field="extendRemarks"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- 簽核人員指定 -->
+    <div id="approverSection" class="form-section" style="display: none;">
+      <h3>核簽人員</h3>
+      <div class="form-group">
+        <label>課長簽名</label>
+        <input type="text" placeholder="自動帶入或手動輸入課長名字" class="form-data" data-field="approver1">
+      </div>
+      <div class="form-group">
+        <label>備註（簽核人用）</label>
+        <textarea placeholder="留給簽核人的內部備註" class="form-data" data-field="approverNote"></textarea>
+      </div>
+    </div>
+
     <!-- 提交按鈕 -->
     <div class="actions">
-      <button class="btn btn-success" onclick="submitApplication()">提交申請</button>
+      <button class="btn btn-success" onclick="goToDownloadTab()">下一步：下載表單</button>
+      <button class="btn" onclick="saveDraft()">存為草稿</button>
       <button class="btn" onclick="resetForm()">重新填寫</button>
-      <button class="btn" onclick="saveAsDraft()">存為草稿</button>
     </div>
   </div>
 
-  <!-- 提醒管理頁籤 -->
+  <!-- ========== 下載簽署頁籤 ========== -->
+  <div id="download" class="tab-content">
+    <div class="notice">
+      根據您的申請類型，系統將產生對應的申請表單供您下載並簽署
+    </div>
+
+    <div id="documentSection" style="display: none;">
+      <div class="form-section">
+        <h3>下載申請表單</h3>
+        <p style="color: var(--color-text-secondary); margin-bottom: 16px;">以下為根據您的申請內容產生的表單，請下載後完成簽名並回傳</p>
+
+        <div class="document-download">
+          <h4>📄 申請表單 PDF</h4>
+          <p id="documentName">留職停薪申請表</p>
+          <button class="btn btn-primary" onclick="downloadPDF()">下載 PDF 檔案</button>
+        </div>
+
+        <div class="document-download">
+          <h4>📋 表單填寫說明</h4>
+          <p>下載 PDF 檔案後，建議以下方式完成簽名：</p>
+          <ul style="font-size: 13px; margin: 8px 0; padding-left: 20px;">
+            <li>方式1：列印並手寫簽名後，掃描或拍照上傳</li>
+            <li>方式2：使用 Adobe Acrobat 或類似工具直接在 PDF 上簽名</li>
+            <li>方式3：在下方上傳簽名圖片，系統將自動插入 PDF</li>
+          </ul>
+        </div>
+
+        <div class="form-section">
+          <h3>上傳簽署後的表單</h3>
+          
+          <div class="form-group">
+            <label>上傳已簽署的 PDF</label>
+            <input type="file" accept=".pdf" id="signedPDFUpload" style="padding: 8px;">
+          </div>
+
+          <div class="signature-section">
+            <h4>或在此簽名上傳</h4>
+            <p style="font-size: 13px; color: var(--color-text-secondary); margin-top: 0;">如無已簽署的 PDF，可在此簽名並上傳</p>
+            
+            <div style="border: 2px dashed var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 16px; text-align: center; margin: 12px 0; background: var(--color-background-secondary);">
+              <canvas id="signatureCanvas" style="width: 100%; max-width: 400px; height: 120px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); background: white; cursor: crosshair; display: block; margin: 0 auto;"></canvas>
+            </div>
+
+            <div style="display: flex; gap: 8px; justify-content: center; margin: 12px 0;">
+              <button class="btn" onclick="clearSignature()">清除簽名</button>
+              <button class="btn btn-primary" onclick="saveSignature()">確認簽名</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-success" onclick="submitApplication()">完成提交</button>
+        <button class="btn" onclick="switchTab('apply')">返回修改</button>
+      </div>
+    </div>
+
+    <div id="noDataMessage" class="notice" style="margin-top: 20px;">
+      請先回到「申請」頁籤完成表單，再回到本頁下載表單
+    </div>
+  </div>
+
+  <!-- ========== 提醒管理頁籤 ========== -->
   <div id="reminders" class="tab-content">
     <div class="form-section">
       <h3>自動提醒設定</h3>
       <p style="color: var(--color-text-secondary); font-size: 14px; margin-top: 0;">系統會在重要日期自動發送提醒通知，您可以選擇提醒方式</p>
     </div>
 
-    <div class="reminder-item">
+    <div class="document-download">
       <h4>📅 Google 日曆提醒</h4>
-      <p>將回職申請日期同步到 Google 日曆，接收自動提醒</p>
+      <p>將申請日期同步到 Google 日曆，接收自動提醒</p>
       <button class="btn btn-primary" onclick="syncGoogleCalendar()">連接 Google 日曆</button>
     </div>
 
-    <div class="reminder-item">
+    <div class="document-download">
       <h4>💬 LINE 通知提醒</h4>
-      <p>直接在 LINE 上收到回職申請提醒與申請進度通知</p>
+      <p>直接在 LINE 上收到申請提醒與進度通知</p>
       <button class="btn btn-primary" onclick="linkLineNotify()">連接 LINE Notify</button>
     </div>
 
-    <div class="reminder-item">
+    <div class="document-download">
       <h4>📧 電子郵件提醒</h4>
       <p>在您的信箱收到申請狀態更新與核簽結果</p>
       <div class="form-group" style="margin-top: 12px;">
@@ -558,7 +809,7 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
     </div>
   </div>
 
-  <!-- 申請狀態頁籤 -->
+  <!-- ========== 申請狀態頁籤 ========== -->
   <div id="status" class="tab-content">
     <div class="form-section">
       <h3>申請狀態追蹤</h3>
@@ -568,20 +819,20 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
       <div style="background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 16px; margin-bottom: 16px;">
         <table style="width: 100%; font-size: 13px;">
           <tr style="border-bottom: 0.5px solid var(--color-border-tertiary);">
-            <td style="padding: 8px 0; color: var(--color-text-secondary);">申請類型</td>
-            <td style="text-align: right; padding: 8px 0; color: var(--color-text-primary);">新申請回職</td>
-          </tr>
-          <tr style="border-bottom: 0.5px solid var(--color-border-tertiary);">
-            <td style="padding: 8px 0; color: var(--color-text-secondary);">申請日期</td>
+            <td style="padding: 8px 0; color: var(--color-text-secondary); width: 40%;">申請類型</td>
             <td style="text-align: right; padding: 8px 0; color: var(--color-text-primary);">待提交</td>
           </tr>
           <tr style="border-bottom: 0.5px solid var(--color-border-tertiary);">
-            <td style="padding: 8px 0; color: var(--color-text-secondary);">核簽進度</td>
-            <td style="text-align: right; padding: 8px 0; color: var(--color-text-primary);">等待初稿</td>
+            <td style="padding: 8px 0; color: var(--color-text-secondary);">申請日期</td>
+            <td style="text-align: right; padding: 8px 0; color: var(--color-text-primary);">--</td>
+          </tr>
+          <tr style="border-bottom: 0.5px solid var(--color-border-tertiary);">
+            <td style="padding: 8px 0; color: var(--color-text-secondary);">申請編號</td>
+            <td style="text-align: right; padding: 8px 0; color: var(--color-text-primary);">--</td>
           </tr>
           <tr>
-            <td style="padding: 8px 0; color: var(--color-text-secondary);">預計完成</td>
-            <td style="text-align: right; padding: 8px 0; color: var(--color-text-primary);">--</td>
+            <td style="padding: 8px 0; color: var(--color-text-secondary);">核簽進度</td>
+            <td style="text-align: right; padding: 8px 0; color: var(--color-text-primary);">等待提交</td>
           </tr>
         </table>
       </div>
@@ -593,12 +844,16 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
   </div>
 </div>
 
+<!-- 成功提交 Modal -->
 <div id="successModal" class="modal-overlay">
   <div class="modal">
     <h2>✓ 申請已提交</h2>
     <p>您的申請已成功提交，系統將發送確認信至您的信箱。</p>
     <p style="font-size: 13px; color: var(--color-text-secondary);">
-      申請編號：<strong id="applicationNumber"></strong>
+      申請編號：<strong id="applicationNumber">APP-000000</strong>
+    </p>
+    <p style="font-size: 13px; color: var(--color-text-secondary);">
+      提交時間：<strong id="submitTime">2024-01-01</strong>
     </p>
     <div class="modal-buttons">
       <button class="btn btn-success" onclick="closeModal()">完成</button>
@@ -609,46 +864,84 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
 <script>
 let isDrawing = false;
 let canvas, ctx;
-let hasSignature = false;
+let signatureData = null;
 
+// ========== 頁籤切換 ==========
 function switchTab(tabName) {
-  // 隱藏所有內容
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
   
-  // 顯示選中的頁籤
   document.getElementById(tabName).classList.add('active');
   event.target.classList.add('active');
-}
 
-function selectType(element, type) {
-  // 更新選中狀態
-  document.querySelectorAll('.option-card').forEach(el => el.classList.remove('selected'));
-  element.classList.add('selected');
-  document.getElementById('applicationType').value = type;
-
-  // 顯示對應的表單
-  document.getElementById('newApplyForm').style.display = type === 'new' ? 'block' : 'none';
-  document.getElementById('extendApplyForm').style.display = type === 'extend' ? 'block' : 'none';
-
-  // 初始化簽名板
-  if (type === 'new') {
-    setTimeout(() => initCanvas('signatureCanvas'), 100);
-  } else {
-    setTimeout(() => initCanvas('signatureCanvas2'), 100);
+  if (tabName === 'download') {
+    checkAndShowDocuments();
   }
 }
 
-function initCanvas(canvasId) {
-  canvas = document.getElementById(canvasId);
+// ========== 申請類型選擇 ==========
+function selectApplicationType(element, type) {
+  document.querySelectorAll('#applicationTypeCards .option-card').forEach(el => el.classList.remove('selected'));
+  element.classList.add('selected');
+  document.getElementById('applicationType').value = type;
+
+  document.getElementById('applyForm').style.display = type === 'apply' ? 'block' : 'none';
+  document.getElementById('returnForm').style.display = type === 'return' ? 'block' : 'none';
+  document.getElementById('extendForm').style.display = type === 'extend' ? 'block' : 'none';
+  document.getElementById('approverSection').style.display = 'block';
+}
+
+// ========== 留職停薪類型選擇 ==========
+function selectLeaveType(element, type) {
+  document.querySelectorAll('#leaveTypeCards .option-card').forEach(el => el.classList.remove('selected'));
+  element.classList.add('selected');
+  document.getElementById('leaveType').value = type;
+
+  // 顯示或隱藏相關條件區段
+  document.getElementById('childcareSection').classList.toggle('show', type === 'childcare');
+  document.getElementById('otherReasonSection').classList.toggle('show', type === 'other');
+  document.getElementById('stipendSection').classList.toggle('show', type === 'childcare');
+  
+  // 重置津貼選項
+  document.getElementById('stipendOption').value = '';
+  document.getElementById('stipendDetailsForm').classList.remove('show');
+}
+
+// ========== 津貼申請邏輯 ==========
+function toggleStipendForm() {
+  const value = document.getElementById('stipendOption').value;
+  document.getElementById('stipendDetailsForm').classList.toggle('show', value === 'yes');
+}
+
+function toggleExtendStipendForm() {
+  const value = document.getElementById('extendStipendOption').value;
+  document.getElementById('extendStipendDetailsForm').classList.toggle('show', value === 'yes');
+}
+
+// ========== 延長申請的留職停薪類型 ==========
+document.addEventListener('DOMContentLoaded', function() {
+  const currentLeaveTypeSelectExtend = document.querySelector('select[data-field="currentLeaveTypeExtend"]');
+  if (currentLeaveTypeSelectExtend) {
+    currentLeaveTypeSelectExtend.addEventListener('change', function() {
+      const isChildcare = this.value === 'childcare';
+      document.getElementById('extendChildcareSection').classList.toggle('show', isChildcare);
+    });
+  }
+});
+
+// ========== 簽名板初始化 ==========
+function initSignatureCanvas() {
+  canvas = document.getElementById('signatureCanvas');
   if (!canvas) return;
   
-  const rect = canvas.getBoundingClientRect();
-  canvas.width = 400;
-  canvas.height = 120;
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = 400 * dpr;
+  canvas.height = 120 * dpr;
+  
   ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
   ctx.fillStyle = 'white';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillRect(0, 0, 400, 120);
   ctx.strokeStyle = '#333';
   ctx.lineWidth = 2;
 
@@ -657,9 +950,8 @@ function initCanvas(canvasId) {
   canvas.addEventListener('mouseup', stopDrawing);
   canvas.addEventListener('mouseout', stopDrawing);
 
-  // Touch events
-  canvas.addEventListener('touchstart', startDrawingTouch);
-  canvas.addEventListener('touchmove', drawTouch);
+  canvas.addEventListener('touchstart', startDrawingTouch, false);
+  canvas.addEventListener('touchmove', drawTouch, false);
   canvas.addEventListener('touchend', stopDrawing);
 }
 
@@ -679,7 +971,6 @@ function draw(e) {
   const y = e.clientY - rect.top;
   ctx.lineTo(x, y);
   ctx.stroke();
-  hasSignature = true;
 }
 
 function stopDrawing() {
@@ -703,76 +994,99 @@ function drawTouch(e) {
   const y = e.touches[0].clientY - rect.top;
   ctx.lineTo(x, y);
   ctx.stroke();
-  hasSignature = true;
 }
 
 function clearSignature() {
-  ctx.fillStyle = 'white';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  hasSignature = false;
-}
-
-function clearSignature2() {
-  const canvas2 = document.getElementById('signatureCanvas2');
-  const ctx2 = canvas2.getContext('2d');
-  ctx2.fillStyle = 'white';
-  ctx2.fillRect(0, 0, canvas2.width, canvas2.height);
-}
-
-function confirmSignature() {
-  if (!hasSignature) {
-    alert('請先簽名');
-    return;
+  if (ctx) {
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    signatureData = null;
   }
-  alert('簽名已確認 ✓');
 }
 
-function confirmSignature2() {
-  alert('簽名已確認 ✓');
+function saveSignature() {
+  if (!canvas) return;
+  signatureData = canvas.toDataURL('image/png');
+  alert('✓ 簽名已確認');
 }
 
-document.getElementById('stipendOption')?.addEventListener('change', function() {
-  document.getElementById('stipendForm').style.display = this.value === 'yes' ? 'block' : 'none';
-});
+// ========== 表單操作 ==========
+function resetForm() {
+  document.querySelectorAll('.form-data').forEach(el => el.value = '');
+  document.querySelectorAll('.option-card').forEach(el => el.classList.remove('selected'));
+  document.getElementById('applicationType').value = '';
+  document.getElementById('leaveType').value = '';
+  document.getElementById('applyForm').style.display = 'none';
+  document.getElementById('returnForm').style.display = 'none';
+  document.getElementById('extendForm').style.display = 'none';
+}
 
-function submitApplication() {
-  const type = document.getElementById('applicationType').value;
-  if (!type) {
+function saveDraft() {
+  alert('✓ 已保存為草稿');
+}
+
+function goToDownloadTab() {
+  if (!document.getElementById('applicationType').value) {
     alert('請先選擇申請類型');
     return;
   }
-  if (!hasSignature) {
-    alert('請先簽名');
+  switchTab('download');
+}
+
+// ========== 下載 PDF ==========
+function downloadPDF() {
+  alert('✓ 已下載申請表 PDF\n\n請在下載的 PDF 中完成簽名並上傳回來');
+}
+
+function checkAndShowDocuments() {
+  const appType = document.getElementById('applicationType').value;
+  if (appType) {
+    document.getElementById('documentSection').style.display = 'block';
+    document.getElementById('noDataMessage').style.display = 'none';
+
+    const docNames = {
+      'apply': '留職停薪申請表',
+      'return': '回職復薪申請表',
+      'extend': '延長留職停薪申請表'
+    };
+    document.getElementById('documentName').textContent = docNames[appType];
+  } else {
+    document.getElementById('documentSection').style.display = 'none';
+    document.getElementById('noDataMessage').style.display = 'block';
+  }
+
+  // 初始化簽名板
+  setTimeout(() => initSignatureCanvas(), 100);
+}
+
+// ========== 提交申請 ==========
+function submitApplication() {
+  if (!signatureData && !document.getElementById('signedPDFUpload').files.length) {
+    alert('請上傳已簽署的 PDF 或完成簽名');
     return;
   }
 
   const appNumber = 'APP-' + Date.now().toString().slice(-8);
+  const now = new Date().toLocaleDateString('zh-TW');
+  
   document.getElementById('applicationNumber').textContent = appNumber;
+  document.getElementById('submitTime').textContent = now;
   document.getElementById('successModal').classList.add('show');
 }
 
 function closeModal() {
   document.getElementById('successModal').classList.remove('show');
+  resetForm();
+  switchTab('status');
 }
 
-function resetForm() {
-  document.querySelectorAll('input, textarea, select').forEach(el => el.value = '');
-  document.getElementById('applicationType').value = '';
-  document.querySelectorAll('.option-card').forEach(el => el.classList.remove('selected'));
-  document.getElementById('newApplyForm').style.display = 'none';
-  document.getElementById('extendApplyForm').style.display = 'none';
-}
-
-function saveAsDraft() {
-  alert('已保存為草稿 📝');
-}
-
+// ========== 提醒整合 ==========
 function syncGoogleCalendar() {
-  alert('✓ 已成功連接 Google 日曆\n\n回職日期將自動加入您的日曆，並設定提醒通知。');
+  alert('✓ 已成功連接 Google 日曆');
 }
 
 function linkLineNotify() {
-  alert('✓ 已成功連接 LINE Notify\n\n申請進度與提醒通知將直接發送到您的 LINE。');
+  alert('✓ 已成功連接 LINE Notify');
 }
 
 function subscribeEmail() {
@@ -781,7 +1095,7 @@ function subscribeEmail() {
     alert('請輸入信箱');
     return;
   }
-  alert(`✓ 已訂閱 ${email}\n\n申請狀態更新將發送至此信箱。`);
+  alert(`✓ 已訂閱 ${email}`);
 }
 </script>
 </body>
