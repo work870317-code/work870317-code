@@ -109,7 +109,7 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
 
 .form-group textarea {
   resize: vertical;
-  min-height: 80px;
+  min-height: 100px;
 }
 
 .form-group.required label::after {
@@ -353,8 +353,18 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
   gap: 16px;
 }
 
+.form-row-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
 @media (max-width: 600px) {
   .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row-3 {
     grid-template-columns: 1fr;
   }
 
@@ -372,6 +382,63 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
   font-size: 11px;
   font-weight: 500;
   margin-left: 8px;
+}
+
+.file-upload-section {
+  background: var(--color-background-secondary);
+  border: 2px dashed var(--color-border-secondary);
+  border-radius: var(--border-radius-md);
+  padding: 20px;
+  text-align: center;
+  margin: 12px 0;
+}
+
+.file-upload-section input[type="file"] {
+  padding: 0;
+}
+
+.uploaded-files {
+  margin-top: 12px;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-md);
+  padding: 12px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.file-item-name {
+  color: var(--color-text-primary);
+  font-weight: 500;
+}
+
+.file-item-remove {
+  background: none;
+  border: none;
+  color: var(--color-text-danger);
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.reason-box {
+  background: var(--color-background-secondary);
+  border: 1px solid var(--color-border-secondary);
+  border-radius: var(--border-radius-md);
+  padding: 16px;
+  margin: 12px 0;
+}
+
+.reason-box h4 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary);
 }
 </style>
 </head>
@@ -506,6 +573,27 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
           </div>
         </div>
 
+        <!-- 申請事由 -->
+        <h4>申請事由</h4>
+        <div class="reason-box">
+          <h4>申請原因詳述</h4>
+          <div class="form-group">
+            <textarea placeholder="詳細說明申請留職停薪的具體原因、背景及相關情形..." class="form-data" data-field="applyReason"></textarea>
+          </div>
+        </div>
+
+        <!-- 佐證資料 -->
+        <h4>佐證資料</h4>
+        <div class="form-group">
+          <label>上傳相關證明文件（如戶籍資料、出生證明、診斷書等）</label>
+          <p style="font-size: 13px; color: var(--color-text-secondary); margin: 6px 0;">支援格式：PDF、JPG、PNG (單檔最大 10MB)</p>
+          <div class="file-upload-section">
+            <input type="file" id="supportingDocsApply" multiple accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload('supportingDocsApply')">
+            <p style="font-size: 13px; color: var(--color-text-secondary); margin-top: 8px;">點擊選擇或拖放檔案</p>
+          </div>
+          <div class="uploaded-files" id="applyFilesList"></div>
+        </div>
+
         <div class="form-group">
           <label>備註</label>
           <textarea placeholder="如有特殊說明，請輸入備註" class="form-data" data-field="remarks"></textarea>
@@ -569,6 +657,27 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
         <div class="form-group required">
           <label>擬回職日期</label>
           <input type="date" class="form-data" data-field="returnDate">
+        </div>
+
+        <!-- 申請事由 -->
+        <h4>申請事由</h4>
+        <div class="reason-box">
+          <h4>申請原因詳述</h4>
+          <div class="form-group">
+            <textarea placeholder="詳細說明回職的具體原因及相關情形..." class="form-data" data-field="returnReason"></textarea>
+          </div>
+        </div>
+
+        <!-- 佐證資料 -->
+        <h4>佐證資料</h4>
+        <div class="form-group">
+          <label>上傳相關證明文件（如需要）</label>
+          <p style="font-size: 13px; color: var(--color-text-secondary); margin: 6px 0;">支援格式：PDF、JPG、PNG (單檔最大 10MB)</p>
+          <div class="file-upload-section">
+            <input type="file" id="supportingDocsReturn" multiple accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload('supportingDocsReturn')">
+            <p style="font-size: 13px; color: var(--color-text-secondary); margin-top: 8px;">點擊選擇或拖放檔案</p>
+          </div>
+          <div class="uploaded-files" id="returnFilesList"></div>
         </div>
 
         <div class="form-group">
@@ -636,9 +745,25 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
           <input type="date" class="form-data" data-field="earlyReturnDate">
         </div>
 
+        <!-- 申請事由 -->
+        <h4>申請事由</h4>
+        <div class="reason-box">
+          <h4>提前復薪原因詳述</h4>
+          <div class="form-group">
+            <textarea placeholder="詳細說明提前復薪的具體原因及相關情形..." class="form-data" data-field="earlyReturnReason"></textarea>
+          </div>
+        </div>
+
+        <!-- 佐證資料 -->
+        <h4>佐證資料</h4>
         <div class="form-group">
-          <label>提前復薪原因說明</label>
-          <textarea placeholder="說明提前復薪的原因" class="form-data" data-field="earlyReturnReason"></textarea>
+          <label>上傳相關證明文件（如需要）</label>
+          <p style="font-size: 13px; color: var(--color-text-secondary); margin: 6px 0;">支援格式：PDF、JPG、PNG (單檔最大 10MB)</p>
+          <div class="file-upload-section">
+            <input type="file" id="supportingDocsEarlyReturn" multiple accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload('supportingDocsEarlyReturn')">
+            <p style="font-size: 13px; color: var(--color-text-secondary); margin-top: 8px;">點擊選擇或拖放檔案</p>
+          </div>
+          <div class="uploaded-files" id="earlyReturnFilesList"></div>
         </div>
 
         <div class="form-group">
@@ -689,6 +814,19 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
           </select>
         </div>
 
+        <!-- 原申請留職停薪起迄日期 -->
+        <div class="form-row">
+          <div class="form-group required">
+            <label>原申請留職停薪起日</label>
+            <input type="date" class="form-data" data-field="originalLeaveStartDate">
+          </div>
+          <div class="form-group required">
+            <label>原申請留職停薪迄日</label>
+            <input type="date" class="form-data" data-field="originalLeaveEndDate">
+          </div>
+        </div>
+
+        <!-- 延長期限 -->
         <div class="form-row">
           <div class="form-group required">
             <label>現留職停薪迄日</label>
@@ -700,10 +838,13 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
           </div>
         </div>
 
-        <h4>延長原因</h4>
-        <div class="form-group">
-          <label>延長原因說明</label>
-          <textarea placeholder="詳細說明申請延長的原因" class="form-data" data-field="extendReason"></textarea>
+        <!-- 申請事由 -->
+        <h4>申請事由</h4>
+        <div class="reason-box">
+          <h4>延長原因詳述</h4>
+          <div class="form-group">
+            <textarea placeholder="詳細說明申請延長的具體原因及相關情形..." class="form-data" data-field="extendReason"></textarea>
+          </div>
         </div>
 
         <!-- 育嬰/育孫留職停薪延長專有 -->
@@ -711,6 +852,18 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
           <div class="notice success-notice">
             ✓ 此類型可申請留職停薪津貼，請於下一步下載津貼申請表
           </div>
+        </div>
+
+        <!-- 佐證資料 -->
+        <h4>佐證資料</h4>
+        <div class="form-group">
+          <label>上傳相關證明文件（如戶籍資料、出生證明、診斷書等）</label>
+          <p style="font-size: 13px; color: var(--color-text-secondary); margin: 6px 0;">支援格式：PDF、JPG、PNG (單檔最大 10MB)</p>
+          <div class="file-upload-section">
+            <input type="file" id="supportingDocsExtend" multiple accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileUpload('supportingDocsExtend')">
+            <p style="font-size: 13px; color: var(--color-text-secondary); margin-top: 8px;">點擊選擇或拖放檔案</p>
+          </div>
+          <div class="uploaded-files" id="extendFilesList"></div>
         </div>
 
         <div class="form-group">
@@ -891,6 +1044,7 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
 let isDrawing = false;
 let canvas, ctx;
 let signatureData = null;
+let uploadedFiles = {};
 
 // ========== 頁籤切換 ==========
 function switchTab(tabName) {
@@ -902,6 +1056,53 @@ function switchTab(tabName) {
 
   if (tabName === 'download') {
     checkAndShowDocuments();
+  }
+}
+
+// ========== 檔案上傳處理 ==========
+function handleFileUpload(inputId) {
+  const input = document.getElementById(inputId);
+  const filesList = input.id.replace('supportingDocs', '') + 'FilesList';
+  const filesContainer = document.getElementById(filesList);
+  
+  if (!uploadedFiles[inputId]) {
+    uploadedFiles[inputId] = [];
+  }
+
+  Array.from(input.files).forEach(file => {
+    if (file.size > 10 * 1024 * 1024) {
+      alert(`${file.name} 超過 10MB，請選擇較小的檔案`);
+      return;
+    }
+    
+    uploadedFiles[inputId].push(file);
+  });
+
+  displayUploadedFiles(inputId);
+}
+
+function displayUploadedFiles(inputId) {
+  const filesList = inputId.replace('supportingDocs', '') + 'FilesList';
+  const filesContainer = document.getElementById(filesList);
+  filesContainer.innerHTML = '';
+
+  if (uploadedFiles[inputId]) {
+    uploadedFiles[inputId].forEach((file, index) => {
+      const fileItem = document.createElement('div');
+      fileItem.className = 'file-item';
+      fileItem.innerHTML = `
+        <span class="file-item-name">📎 ${file.name}</span>
+        <button class="file-item-remove" onclick="removeFile('${inputId}', ${index})">✕ 移除</button>
+      `;
+      filesContainer.appendChild(fileItem);
+    });
+  }
+}
+
+function removeFile(inputId, index) {
+  if (uploadedFiles[inputId]) {
+    uploadedFiles[inputId].splice(index, 1);
+    displayUploadedFiles(inputId);
   }
 }
 
@@ -925,14 +1126,11 @@ function selectLeaveType(element, type) {
 
   const isChildcareOrGrandchild = type === 'childcare' || type === 'grandchild';
   
-  // 顯示或隱藏相關條件區段
   document.getElementById('childcareSection').classList.toggle('show', isChildcareOrGrandchild);
   document.getElementById('otherReasonSection').classList.toggle('show', type === 'other');
   
-  // 顯示津貼提醒
   document.getElementById('applyStipendBadge').style.display = isChildcareOrGrandchild ? 'inline-block' : 'none';
   
-  // 重置相關欄位
   if (!isChildcareOrGrandchild) {
     document.querySelector('[data-field="childBirthDate"]').value = '';
   }
@@ -1040,6 +1238,8 @@ function resetForm() {
   document.getElementById('earlyReturnForm').style.display = 'none';
   document.getElementById('extendForm').style.display = 'none';
   document.getElementById('applyStipendBadge').style.display = 'none';
+  uploadedFiles = {};
+  document.querySelectorAll('.uploaded-files').forEach(el => el.innerHTML = '');
 }
 
 function saveDraft() {
@@ -1082,7 +1282,6 @@ function checkAndShowDocuments() {
     };
     document.getElementById('mainDocumentName').textContent = docNames[appType];
 
-    // 判斷是否顯示津貼申請表
     const isChildcareOrGrandchild = 
       (appType === 'apply' && (leaveType === 'childcare' || leaveType === 'grandchild')) ||
       (appType === 'extend' && (currentLeaveType === 'childcare' || currentLeaveType === 'grandchild'));
@@ -1093,7 +1292,6 @@ function checkAndShowDocuments() {
     document.getElementById('noDataMessage').style.display = 'block';
   }
 
-  // 初始化簽名板
   setTimeout(() => initSignatureCanvas(), 100);
 }
 
