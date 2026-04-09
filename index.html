@@ -172,6 +172,12 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
   color: var(--color-text-warning);
 }
 
+.success-notice {
+  background: var(--color-background-success);
+  border-left: 3px solid var(--color-border-success);
+  color: var(--color-text-success);
+}
+
 .conditional-section {
   display: none;
   background: var(--color-background-secondary);
@@ -222,12 +228,6 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
   opacity: 0.9;
 }
 
-.btn-warning {
-  background: var(--color-background-warning);
-  border-color: var(--color-border-warning);
-  color: var(--color-text-warning);
-}
-
 .actions {
   display: flex;
   gap: 12px;
@@ -273,16 +273,6 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
   font-size: 14px;
   font-weight: 500;
   color: var(--color-text-primary);
-}
-
-.signature-note {
-  background: var(--color-background-info);
-  border: 0.5px solid var(--color-border-info);
-  border-radius: var(--border-radius-md);
-  padding: 12px;
-  margin-bottom: 12px;
-  font-size: 13px;
-  color: var(--color-text-info);
 }
 
 .modal-overlay {
@@ -372,6 +362,17 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
     grid-template-columns: 1fr;
   }
 }
+
+.stipend-badge {
+  display: inline-block;
+  background: var(--color-background-success);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  margin-left: 8px;
+}
 </style>
 </head>
 <body>
@@ -405,6 +406,10 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
         <div class="option-card" onclick="selectApplicationType(this, 'return')">
           <h4>申請回職復薪</h4>
           <p>留職停薪期滿申請回職</p>
+        </div>
+        <div class="option-card" onclick="selectApplicationType(this, 'early-return')">
+          <h4>申請提前復薪</h4>
+          <p>提前結束留職停薪期間</p>
         </div>
         <div class="option-card" onclick="selectApplicationType(this, 'extend')">
           <h4>申請延長留職停薪</h4>
@@ -444,11 +449,15 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
         </div>
 
         <!-- 留職停薪類型 -->
-        <h4>留職停薪類型</h4>
+        <h4>留職停薪類型 <span class="stipend-badge" id="applyStipendBadge" style="display: none;">可申請津貼</span></h4>
         <div class="option-cards" id="leaveTypeCards">
           <div class="option-card" onclick="selectLeaveType(this, 'childcare')">
-            <h4>育嬰（含孫）</h4>
-            <p>照顧嬰幼兒或孫</p>
+            <h4>育嬰</h4>
+            <p>照顧嬰幼兒</p>
+          </div>
+          <div class="option-card" onclick="selectLeaveType(this, 'grandchild')">
+            <h4>育孫</h4>
+            <p>照顧孫子</p>
           </div>
           <div class="option-card" onclick="selectLeaveType(this, 'military')">
             <h4>兵役</h4>
@@ -478,10 +487,10 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
           </div>
         </div>
 
-        <!-- 育嬰留職停薪專有 -->
+        <!-- 育嬰/育孫留職停薪專有 -->
         <div id="childcareSection" class="conditional-section">
-          <div class="notice warning-notice">
-            ℹ️ 育嬰留職停薪可申請津貼，將在下一步提供
+          <div class="notice success-notice">
+            ✓ 此類型可申請留職停薪津貼，請於下一步下載津貼申請表
           </div>
           <div class="form-group">
             <label>受撫養兒童出生日期</label>
@@ -500,39 +509,6 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
         <div class="form-group">
           <label>備註</label>
           <textarea placeholder="如有特殊說明，請輸入備註" class="form-data" data-field="remarks"></textarea>
-        </div>
-
-        <!-- 津貼申請（僅育嬰） -->
-        <div id="stipendSection" class="conditional-section">
-          <h4>津貼申請</h4>
-          <div class="form-group">
-            <label>是否申請留職停薪津貼？</label>
-            <select id="stipendOption" onchange="toggleStipendForm()">
-              <option value="">--請選擇--</option>
-              <option value="yes">是，申請津貼</option>
-              <option value="no">否，不申請</option>
-            </select>
-          </div>
-
-          <div id="stipendDetailsForm" class="conditional-section">
-            <div class="form-group">
-              <label>津貼申請類別</label>
-              <select class="form-data" data-field="stipendType">
-                <option value="">--請選擇--</option>
-                <option value="family">眷屬扶養津貼</option>
-                <option value="hardship">困苦津貼</option>
-                <option value="other">其他津貼</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>申請金額（月額）</label>
-              <input type="number" placeholder="0" class="form-data" data-field="stipendAmount">
-            </div>
-            <div class="form-group">
-              <label>申請津貼期限</label>
-              <input type="date" class="form-data" data-field="stipendStartDate">
-            </div>
-          </div>
         </div>
       </div>
     </div>
@@ -570,7 +546,8 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
           <label>留職停薪類型</label>
           <select class="form-data" data-field="currentLeaveType">
             <option value="">--請選擇--</option>
-            <option value="childcare">育嬰（含孫）</option>
+            <option value="childcare">育嬰</option>
+            <option value="grandchild">育孫</option>
             <option value="military">兵役</option>
             <option value="elderly">侍親</option>
             <option value="other">其他</option>
@@ -601,7 +578,77 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
       </div>
     </div>
 
-    <!-- ========== 3. 申請延長留職停薪表單 ========== -->
+    <!-- ========== 3. 申請提前復薪表單 ========== -->
+    <div id="earlyReturnForm" style="display: none;">
+      <div class="form-section">
+        <h3>申請提前復薪</h3>
+
+        <h4>基本資料</h4>
+        <div class="form-row">
+          <div class="form-group required">
+            <label>姓名</label>
+            <input type="text" placeholder="請輸入姓名" class="form-data" data-field="earlyReturnName">
+          </div>
+          <div class="form-group required">
+            <label>身分證字號</label>
+            <input type="text" placeholder="A123456789" class="form-data" data-field="earlyReturnIdNumber">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group required">
+            <label>職稱</label>
+            <input type="text" placeholder="例：科員、科長" class="form-data" data-field="earlyReturnPosition">
+          </div>
+          <div class="form-group required">
+            <label>所在機關單位</label>
+            <input type="text" placeholder="例：人事處" class="form-data" data-field="earlyReturnDepartment">
+          </div>
+        </div>
+
+        <h4>現有留職停薪狀況</h4>
+        <div class="form-group">
+          <label>留職停薪類型</label>
+          <select class="form-data" data-field="currentLeaveTypeEarly">
+            <option value="">--請選擇--</option>
+            <option value="childcare">育嬰</option>
+            <option value="grandchild">育孫</option>
+            <option value="military">兵役</option>
+            <option value="elderly">侍親</option>
+            <option value="other">其他</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group required">
+            <label>原留職停薪起日</label>
+            <input type="date" class="form-data" data-field="originalStartDateEarly">
+          </div>
+          <div class="form-group required">
+            <label>原留職停薪迄日</label>
+            <input type="date" class="form-data" data-field="originalEndDateEarly">
+          </div>
+        </div>
+
+        <h4>提前復薪</h4>
+        <div class="form-group required">
+          <label>擬提前復薪日期</label>
+          <input type="date" class="form-data" data-field="earlyReturnDate">
+        </div>
+
+        <div class="form-group">
+          <label>提前復薪原因說明</label>
+          <textarea placeholder="說明提前復薪的原因" class="form-data" data-field="earlyReturnReason"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>備註</label>
+          <textarea placeholder="如有特殊說明，請輸入備註" class="form-data" data-field="earlyReturnRemarks"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 4. 申請延長留職停薪表單 ========== -->
     <div id="extendForm" style="display: none;">
       <div class="form-section">
         <h3>申請延長留職停薪</h3>
@@ -632,9 +679,10 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
         <h4>現有留職停薪狀況</h4>
         <div class="form-group">
           <label>留職停薪類型</label>
-          <select class="form-data" data-field="currentLeaveTypeExtend">
+          <select class="form-data" data-field="currentLeaveTypeExtend" onchange="checkExtendStipendEligible()">
             <option value="">--請選擇--</option>
-            <option value="childcare">育嬰（含孫）</option>
+            <option value="childcare">育嬰</option>
+            <option value="grandchild">育孫</option>
             <option value="military">兵役</option>
             <option value="elderly">侍親</option>
             <option value="other">其他</option>
@@ -658,35 +706,10 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
           <textarea placeholder="詳細說明申請延長的原因" class="form-data" data-field="extendReason"></textarea>
         </div>
 
-        <!-- 育嬰留職停薪延長專有 -->
+        <!-- 育嬰/育孫留職停薪延長專有 -->
         <div id="extendChildcareSection" class="conditional-section">
-          <h4>津貼申請</h4>
-          <div class="notice warning-notice">
-            育嬰留職停薪延長期間可申請津貼
-          </div>
-          <div class="form-group">
-            <label>是否申請留職停薪津貼？</label>
-            <select id="extendStipendOption" onchange="toggleExtendStipendForm()">
-              <option value="">--請選擇--</option>
-              <option value="yes">是，申請津貼</option>
-              <option value="no">否，不申請</option>
-            </select>
-          </div>
-
-          <div id="extendStipendDetailsForm" class="conditional-section">
-            <div class="form-group">
-              <label>津貼申請類別</label>
-              <select class="form-data" data-field="extendStipendType">
-                <option value="">--請選擇--</option>
-                <option value="family">眷屬扶養津貼</option>
-                <option value="hardship">困苦津貼</option>
-                <option value="other">其他津貼</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>申請金額（月額）</label>
-              <input type="number" placeholder="0" class="form-data" data-field="extendStipendAmount">
-            </div>
+          <div class="notice success-notice">
+            ✓ 此類型可申請留職停薪津貼，請於下一步下載津貼申請表
           </div>
         </div>
 
@@ -694,19 +717,6 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
           <label>備註</label>
           <textarea placeholder="如有特殊說明，請輸入備註" class="form-data" data-field="extendRemarks"></textarea>
         </div>
-      </div>
-    </div>
-
-    <!-- 簽核人員指定 -->
-    <div id="approverSection" class="form-section" style="display: none;">
-      <h3>核簽人員</h3>
-      <div class="form-group">
-        <label>課長簽名</label>
-        <input type="text" placeholder="自動帶入或手動輸入課長名字" class="form-data" data-field="approver1">
-      </div>
-      <div class="form-group">
-        <label>備註（簽核人用）</label>
-        <textarea placeholder="留給簽核人的內部備註" class="form-data" data-field="approverNote"></textarea>
       </div>
     </div>
 
@@ -729,10 +739,18 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
         <h3>下載申請表單</h3>
         <p style="color: var(--color-text-secondary); margin-bottom: 16px;">以下為根據您的申請內容產生的表單，請下載後完成簽名並回傳</p>
 
+        <!-- 主申請表 -->
         <div class="document-download">
-          <h4>📄 申請表單 PDF</h4>
-          <p id="documentName">留職停薪申請表</p>
-          <button class="btn btn-primary" onclick="downloadPDF()">下載 PDF 檔案</button>
+          <h4>📄 <span id="mainDocumentName">留職停薪申請表</span></h4>
+          <p>申請主文件</p>
+          <button class="btn btn-primary" onclick="downloadMainPDF()">下載 PDF 檔案</button>
+        </div>
+
+        <!-- 津貼申請表（條件式） -->
+        <div id="stipendDocSection" class="document-download" style="display: none;">
+          <h4>📋 留職停薪津貼申請表</h4>
+          <p>育嬰/育孫留職停薪専用津貼申請表</p>
+          <button class="btn btn-primary" onclick="downloadStipendPDF()">下載 PDF 檔案</button>
         </div>
 
         <div class="document-download">
@@ -749,8 +767,16 @@ body { margin: 0; padding: 0; font-family: var(--font-sans); }
           <h3>上傳簽署後的表單</h3>
           
           <div class="form-group">
-            <label>上傳已簽署的 PDF</label>
+            <label>上傳已簽署的 PDF 檔案</label>
             <input type="file" accept=".pdf" id="signedPDFUpload" style="padding: 8px;">
+          </div>
+
+          <div id="multiFileUpload" class="conditional-section show">
+            <p style="font-size: 13px; color: var(--color-text-secondary); margin-bottom: 12px;">如有多份表單需上傳，請逐一上傳</p>
+            <div class="form-group">
+              <label>上傳已簽署的津貼申請表（若有）</label>
+              <input type="file" accept=".pdf" id="signedStipendPDFUpload" style="padding: 8px;">
+            </div>
           </div>
 
           <div class="signature-section">
@@ -887,8 +913,8 @@ function selectApplicationType(element, type) {
 
   document.getElementById('applyForm').style.display = type === 'apply' ? 'block' : 'none';
   document.getElementById('returnForm').style.display = type === 'return' ? 'block' : 'none';
+  document.getElementById('earlyReturnForm').style.display = type === 'early-return' ? 'block' : 'none';
   document.getElementById('extendForm').style.display = type === 'extend' ? 'block' : 'none';
-  document.getElementById('approverSection').style.display = 'block';
 }
 
 // ========== 留職停薪類型選擇 ==========
@@ -897,37 +923,30 @@ function selectLeaveType(element, type) {
   element.classList.add('selected');
   document.getElementById('leaveType').value = type;
 
-  // 顯示或隱藏相關條件區段
-  document.getElementById('childcareSection').classList.toggle('show', type === 'childcare');
-  document.getElementById('otherReasonSection').classList.toggle('show', type === 'other');
-  document.getElementById('stipendSection').classList.toggle('show', type === 'childcare');
+  const isChildcareOrGrandchild = type === 'childcare' || type === 'grandchild';
   
-  // 重置津貼選項
-  document.getElementById('stipendOption').value = '';
-  document.getElementById('stipendDetailsForm').classList.remove('show');
-}
-
-// ========== 津貼申請邏輯 ==========
-function toggleStipendForm() {
-  const value = document.getElementById('stipendOption').value;
-  document.getElementById('stipendDetailsForm').classList.toggle('show', value === 'yes');
-}
-
-function toggleExtendStipendForm() {
-  const value = document.getElementById('extendStipendOption').value;
-  document.getElementById('extendStipendDetailsForm').classList.toggle('show', value === 'yes');
-}
-
-// ========== 延長申請的留職停薪類型 ==========
-document.addEventListener('DOMContentLoaded', function() {
-  const currentLeaveTypeSelectExtend = document.querySelector('select[data-field="currentLeaveTypeExtend"]');
-  if (currentLeaveTypeSelectExtend) {
-    currentLeaveTypeSelectExtend.addEventListener('change', function() {
-      const isChildcare = this.value === 'childcare';
-      document.getElementById('extendChildcareSection').classList.toggle('show', isChildcare);
-    });
+  // 顯示或隱藏相關條件區段
+  document.getElementById('childcareSection').classList.toggle('show', isChildcareOrGrandchild);
+  document.getElementById('otherReasonSection').classList.toggle('show', type === 'other');
+  
+  // 顯示津貼提醒
+  document.getElementById('applyStipendBadge').style.display = isChildcareOrGrandchild ? 'inline-block' : 'none';
+  
+  // 重置相關欄位
+  if (!isChildcareOrGrandchild) {
+    document.querySelector('[data-field="childBirthDate"]').value = '';
   }
-});
+  if (type !== 'other') {
+    document.querySelector('[data-field="leaveReason"]').value = '';
+  }
+}
+
+// ========== 延長申請的留職停薪類型檢查 ==========
+function checkExtendStipendEligible() {
+  const leaveType = document.querySelector('select[data-field="currentLeaveTypeExtend"]').value;
+  const isChildcareOrGrandchild = leaveType === 'childcare' || leaveType === 'grandchild';
+  document.getElementById('extendChildcareSection').classList.toggle('show', isChildcareOrGrandchild);
+}
 
 // ========== 簽名板初始化 ==========
 function initSignatureCanvas() {
@@ -1018,7 +1037,9 @@ function resetForm() {
   document.getElementById('leaveType').value = '';
   document.getElementById('applyForm').style.display = 'none';
   document.getElementById('returnForm').style.display = 'none';
+  document.getElementById('earlyReturnForm').style.display = 'none';
   document.getElementById('extendForm').style.display = 'none';
+  document.getElementById('applyStipendBadge').style.display = 'none';
 }
 
 function saveDraft() {
@@ -1034,12 +1055,21 @@ function goToDownloadTab() {
 }
 
 // ========== 下載 PDF ==========
-function downloadPDF() {
+function downloadMainPDF() {
   alert('✓ 已下載申請表 PDF\n\n請在下載的 PDF 中完成簽名並上傳回來');
+}
+
+function downloadStipendPDF() {
+  alert('✓ 已下載津貼申請表 PDF\n\n請完成簽名並上傳回來');
 }
 
 function checkAndShowDocuments() {
   const appType = document.getElementById('applicationType').value;
+  const leaveType = document.getElementById('leaveType').value;
+  const currentLeaveType = document.querySelector('select[data-field="currentLeaveType"]')?.value ||
+                           document.querySelector('select[data-field="currentLeaveTypeEarly"]')?.value ||
+                           document.querySelector('select[data-field="currentLeaveTypeExtend"]')?.value;
+  
   if (appType) {
     document.getElementById('documentSection').style.display = 'block';
     document.getElementById('noDataMessage').style.display = 'none';
@@ -1047,9 +1077,17 @@ function checkAndShowDocuments() {
     const docNames = {
       'apply': '留職停薪申請表',
       'return': '回職復薪申請表',
+      'early-return': '提前復薪申請表',
       'extend': '延長留職停薪申請表'
     };
-    document.getElementById('documentName').textContent = docNames[appType];
+    document.getElementById('mainDocumentName').textContent = docNames[appType];
+
+    // 判斷是否顯示津貼申請表
+    const isChildcareOrGrandchild = 
+      (appType === 'apply' && (leaveType === 'childcare' || leaveType === 'grandchild')) ||
+      (appType === 'extend' && (currentLeaveType === 'childcare' || currentLeaveType === 'grandchild'));
+    
+    document.getElementById('stipendDocSection').style.display = isChildcareOrGrandchild ? 'block' : 'none';
   } else {
     document.getElementById('documentSection').style.display = 'none';
     document.getElementById('noDataMessage').style.display = 'block';
@@ -1061,7 +1099,7 @@ function checkAndShowDocuments() {
 
 // ========== 提交申請 ==========
 function submitApplication() {
-  if (!signatureData && !document.getElementById('signedPDFUpload').files.length) {
+  if (!signatureData && !document.getElementById('signedPDFUpload').files.length && !document.getElementById('signedStipendPDFUpload').files.length) {
     alert('請上傳已簽署的 PDF 或完成簽名');
     return;
   }
